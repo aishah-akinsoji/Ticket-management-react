@@ -15,6 +15,18 @@ export const Dashboard = ({ displayToast, onLogout }) => {
   const inProgressTickets = tickets.filter((t) => t.status?.toLowerCase() === "in progress").length;
   const resolvedTickets = tickets.filter((t) => t.status?.toLowerCase() === "resolved").length;
   useEffect(() => {
+  const sessionActive = sessionStorage.getItem("isAuthenticated");
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (!currentUser || sessionActive !== "true") {
+    navigate("/auth/login");
+    return;
+  }
+
+  // your existing axios fetch here
+}, []);
+
+  useEffect(() => {
     if (!currentUser) {
       navigate("/auth/login");
       return;

@@ -15,6 +15,18 @@ export const TicketManagement = ({ displayToast, onLogout }) => {
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   useEffect(() => {
+  const sessionActive = sessionStorage.getItem("isAuthenticated");
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (!currentUser || sessionActive !== "true") {
+    navigate("/auth/login");
+    return;
+  }
+
+  // your existing axios fetch here
+}, []);
+
+  useEffect(() => {
   if (!currentUser) {
     navigate("/auth/login");
     return;
