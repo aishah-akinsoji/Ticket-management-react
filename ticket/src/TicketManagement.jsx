@@ -31,7 +31,7 @@ export const TicketManagement = ({ displayToast, onLogout }) => {
     navigate("/auth/login");
     return;
   }
-  axios.get(`http://localhost:8000/users/${currentUser.id}`)
+  axios.get(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`)
     .then(res => setTickets(res.data.tickets))
     .catch(() => displayToast("Failed to fetch tickets", "error"));
 }, [currentUser, navigate]);
@@ -59,7 +59,7 @@ export const TicketManagement = ({ displayToast, onLogout }) => {
 
 setErrors(validationMessage);
 if (validationMessage.title || validationMessage.description) return;
-    axios.get(`http://localhost:8000/users/${currentUser.id}`)
+    axios.get(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`)
     .then((res) => {
       const user = res.data;
       let updatedTickets;
@@ -77,7 +77,7 @@ if (validationMessage.title || validationMessage.description) return;
         updatedTickets = [...user.tickets, newTicket];
         displayToast("Ticket created successfully!", "success");
       }
-      axios.patch(`http://localhost:8000/users/${currentUser.id}`, { tickets: updatedTickets })
+      axios.patch(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`, { tickets: updatedTickets })
         .then(() => {
           setTickets(updatedTickets);
           setModalOpen(false);
@@ -99,7 +99,7 @@ if (validationMessage.title || validationMessage.description) return;
     setModalOpen(true);
   };
   const handleSelected = (id) => {
-    axios.get(`http://localhost:8000/users/${currentUser.id}`)
+    axios.get(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`)
       .then((res) => {
         const user = res.data;
         const selectedTicket = user.tickets.find((t) => t.id === id);
@@ -109,12 +109,12 @@ if (validationMessage.title || validationMessage.description) return;
       .catch(() => displayToast("Failed to fetch user data", "error"));
   }
   const handleDelete = (id) => {
-    axios.get(`http://localhost:8000/users/${currentUser.id}`)
+    axios.get(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`)
       .then((res) => {
         const user = res.data;
         const updatedTickets = user.tickets.filter((t) => t.id !== id);
 
-        axios.patch(`http://localhost:8000/users/${currentUser.id}`, { tickets: updatedTickets })
+        axios.patch(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`, { tickets: updatedTickets })
           .then(() => {
             setTickets(updatedTickets);
             displayToast("Ticket deleted successfully!", "success");

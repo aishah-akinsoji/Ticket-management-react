@@ -32,7 +32,7 @@ export const Dashboard = ({ displayToast, onLogout }) => {
       return;
     }
     axios
-      .get(`http://localhost:8000/users/${currentUser.id}`)
+      .get(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`)
       .then((res) => {
         setTickets(res.data.tickets || []);
       })

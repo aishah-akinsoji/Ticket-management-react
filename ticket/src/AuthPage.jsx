@@ -59,13 +59,13 @@ export function AuthPage({ mode, onLogin, displayToast }) {
       return;
     }
 
-    axios.get("http://localhost:8000/users")
+    axios.get("https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users")
       .then(result => {
         const user = result.data.find(user => user.email === loginData.email);
 
         if (!user) {
           isValid = false;
-          validationMessage.email = "Invalid email";
+          validationMessage.email = "Account does not exist. Try signing in";
         } else if (user.password !== loginData.password) {
           isValid = false;
           validationMessage.password = "Wrong password";
@@ -132,7 +132,7 @@ export function AuthPage({ mode, onLogin, displayToast }) {
 
     if (!isValid) return;
 
-    axios.get("http://localhost:8000/users")
+    axios.get("https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users")
       .then(result => {
         const exists = result.data.some(user => user.email === formData.email);
         setAccountExists(exists);
@@ -142,12 +142,12 @@ export function AuthPage({ mode, onLogin, displayToast }) {
           setErrors(validationMessage);
           displayToast("An account already exists with this email", "error");
         } else {
-          axios.post("http://localhost:8000/users", formData)
+          axios.post("https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users", formData)
             .then((result) => {
-              displayToast("Account created successfully", "success");
-              handleLoginSubmit()
+              displayToast("Account created successfully. Login using your details", "success");
+              setLoginData({...loginData, email: formData.email, password: formData.password})
               onLogin();
-              navigate("/dashboard");
+              navigate("/auth/login");
             })
             .catch(() => displayToast("Authentication failed", "error"));
         }
