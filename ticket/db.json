@@ -1,0 +1,20 @@
+{
+  "users": [
+    {
+      "id": "00e5",
+      "uname": "Aishah Akinsoji",
+      "email": "akinsojiaishah1@gmail.com",
+      "password": "Darasimi-2105",
+      "cpassword": "Darasimi-2105",
+      "tickets": [
+        {
+          "id": "e952",
+          "title": "hihgvqwgd ",
+          "description": "bjwehd ",
+          "status": "Open",
+          "priority": "Medium"
+        }
+      ]
+    }
+  ]
+}
