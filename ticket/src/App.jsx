@@ -5,6 +5,7 @@ import { Dashboard } from "./Dashboard.jsx";
 import { TicketManagement } from "./TicketManagement.jsx";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toast } from './Toast'
+import { Footer } from './Footer'
 
 export default function App(){
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -13,19 +14,13 @@ export default function App(){
     message: "",
     type: "",
   });
-
-  // Check sessionStorage on load
   useEffect(() => {
     const auth = sessionStorage.getItem("isAuthenticated") === "true";
     setIsAuthenticated(auth);
   }, []);
 
   const displayToast = (message, type) => {
-    setToast({ display: true, message, type });
-
-    setTimeout(() => {
-      setToast({ display: false, message: "", type: "" });
-    }, 3000);
+    setToast({ ...toast, display: true, message: message, type: type });
   };
 
   const handleLogin = () => {
@@ -36,18 +31,18 @@ export default function App(){
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem("isAuthenticated");
-    sessionStorage.removeItem("currentUser"); // remove user data on logout
+    sessionStorage.removeItem("currentUser");
   };
 
   return (
     <BrowserRouter>
       <Toast toastDisplay={toast}/>
       <Routes>
-        <Route path="/" element={<LandingPage isAuthenticated={isAuthenticated}/>}/>
+        <Route path="/" element={<><LandingPage isAuthenticated={isAuthenticated}/><Footer isAuthenticated={isAuthenticated}/></>}/>
         <Route path="/auth/login" element={<AuthPage mode="login" displayToast={displayToast} onLogin={handleLogin}/>}/>
         <Route path="/auth/signup" element={<AuthPage mode="signup" displayToast={displayToast} onLogin={handleLogin}/>}/>
-        <Route path="/dashboard" element={isAuthenticated ? <Dashboard displayToast={displayToast} onLogout={handleLogout}/> : null}/>
-        <Route path="/tickets" element={isAuthenticated ? <TicketManagement displayToast={toast} onLogout={handleLogout}/> : null}/>
+        <Route path="/dashboard" element={isAuthenticated ? <><Dashboard displayToast={displayToast} onLogout={handleLogout}/><Footer isAuthenticated={isAuthenticated}/></> : null}/>
+        <Route path="/tickets" element={isAuthenticated ? <><TicketManagement displayToast={displayToast} onLogout={handleLogout}/><Footer isAuthenticated={isAuthenticated}/></> : null}/>
       </Routes>
     </BrowserRouter>
   )

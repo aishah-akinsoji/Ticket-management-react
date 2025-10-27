@@ -6,8 +6,6 @@ import axios from 'axios';
 export function AuthPage({ mode, onLogin, displayToast }) {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
-  const [valid, setValid] = useState(true);
-  const [accountExists, setAccountExists] = useState(false);
 
   const [formData, setFormData] = useState({
     uname: "",
@@ -54,7 +52,6 @@ export function AuthPage({ mode, onLogin, displayToast }) {
     }
 
     if (!isValid) {
-      setValid(isValid);
       setErrors(validationMessage);
       return;
     }
@@ -75,8 +72,6 @@ export function AuthPage({ mode, onLogin, displayToast }) {
           onLogin();
           navigate("/dashboard");
         }
-
-        setValid(isValid);
         setErrors(validationMessage);
       })
       .catch(() => displayToast("Authentication failed", "error"));
@@ -126,8 +121,6 @@ export function AuthPage({ mode, onLogin, displayToast }) {
       isValid = false;
       validationMessage.cpassword = "Passwords do not match.";
     }
-
-    setValid(isValid);
     setErrors(validationMessage);
 
     if (!isValid) return;
@@ -135,7 +128,6 @@ export function AuthPage({ mode, onLogin, displayToast }) {
     axios.get("https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users")
       .then(result => {
         const exists = result.data.some(user => user.email === formData.email);
-        setAccountExists(exists);
 
         if (exists) {
           validationMessage.email = "There is already an account with this email. Try logging in.";
@@ -144,10 +136,9 @@ export function AuthPage({ mode, onLogin, displayToast }) {
         } else {
           axios.post("https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users", formData)
             .then((result) => {
-              displayToast("Account created successfully. Login using your details", "success");
-              setLoginData({...loginData, email: formData.email, password: formData.password})
+              displayToast("Account created successfully", "success");
               onLogin();
-              navigate("/auth/login");
+              navigate("/dashboard");
             })
             .catch(() => displayToast("Authentication failed", "error"));
         }

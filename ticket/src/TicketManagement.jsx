@@ -14,7 +14,7 @@ export const TicketManagement = ({ displayToast, onLogout }) => {
   const [errors, setErrors] = useState([]);
   const [deleteConfirmation, setDeleteConfirmation] = useState(false)
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-  useEffect(() => {
+useEffect(() => {
   const sessionActive = sessionStorage.getItem("isAuthenticated");
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
@@ -23,18 +23,20 @@ export const TicketManagement = ({ displayToast, onLogout }) => {
     return;
   }
 
-  // your existing axios fetch here
-}, []);
-
-  useEffect(() => {
-  if (!currentUser) {
-    navigate("/auth/login");
-    return;
-  }
+  // Fetch tickets only once when component mounts
   axios.get(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`)
-    .then(res => setTickets(res.data.tickets))
-    .catch(() => displayToast("Failed to fetch tickets", "error"));
-}, [currentUser, navigate]);
+    .then((res) => {
+      setTickets(res.data.tickets || []);
+    })
+    .catch(() => {
+      if (typeof displayToast === "function") {
+        displayToast("Failed to fetch tickets", "error");
+      } else {
+        console.error("displayToast is not a function");
+      }
+    });
+}, []); // <-- empty dependency array so it runs only once
+
 
   const handleLogout = () => {
     displayToast("Logged out successfully", "success");
@@ -77,16 +79,22 @@ if (validationMessage.title || validationMessage.description) return;
         updatedTickets = [...user.tickets, newTicket];
         displayToast("Ticket created successfully!", "success");
       }
-      axios.patch(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`, { tickets: updatedTickets })
-        .then(() => {
-          setTickets(updatedTickets);
-          setModalOpen(false);
-          setEditingTicket(null);
-          setTicketForm({ title: "", description: "", status: "Open", priority: "Medium" });
-        })
-        .catch(() => displayToast("Failed to update tickets", "error"));
+       axios.put(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`, {...user, tickets: updatedTickets})
+  .then(() => {
+    setTickets(updatedTickets);
+    setModalOpen(false);
+    setEditingTicket(null);
+    setTicketForm({
+      title: "",
+      description: "",
+      status: "Open",
+      priority: "Medium",
+    });
+  })
+  .catch(() => displayToast("Failed to update tickets", "error"));
     })
     .catch(() => displayToast("Failed to fetch user data", "error"));
+
   };
   const handleEditClick = (ticket) => {
     setEditingTicket(ticket);
@@ -114,7 +122,7 @@ if (validationMessage.title || validationMessage.description) return;
         const user = res.data;
         const updatedTickets = user.tickets.filter((t) => t.id !== id);
 
-        axios.patch(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`, { tickets: updatedTickets })
+        axios.put(`https://68fdfc407c700772bb12762f.mockapi.io/ticket-management/users/${currentUser.id}`, {...user, tickets: updatedTickets})
           .then(() => {
             setTickets(updatedTickets);
             displayToast("Ticket deleted successfully!", "success");
