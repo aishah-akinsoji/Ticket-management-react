@@ -22,8 +22,6 @@ export const Dashboard = ({ displayToast, onLogout }) => {
     navigate("/auth/login");
     return;
   }
-
-  // your existing axios fetch here
 }, []);
 
   useEffect(() => {

@@ -37,9 +37,9 @@ export function AuthPage({ mode, onLogin, displayToast }) {
       validationMessage.email = "Please enter a valid email address.";
     }
 
-    if (loginData.password.length < 12) {
+    if (loginData.password.length < 8) {
       isValid = false;
-      validationMessage.password = "Password must be at least 12 characters long.";
+      validationMessage.password = "Password must be at least 8 characters long.";
     } else if (!passwordDigitValid) {
       isValid = false;
       validationMessage.password = "Password must contain at least one digit.";
@@ -103,9 +103,9 @@ export function AuthPage({ mode, onLogin, displayToast }) {
       validationMessage.email = "Please enter a valid email address.";
     }
 
-    if (formData.password.length < 12) {
+    if (formData.password.length < 8) {
       isValid = false;
-      validationMessage.password = "Password must be at least 12 characters long.";
+      validationMessage.password = "Password must be at least 8 characters long.";
     } else if (!passwordDigitValid) {
       isValid = false;
       validationMessage.password = "Password must contain at least one digit.";
@@ -176,6 +176,7 @@ export function AuthPage({ mode, onLogin, displayToast }) {
                 <label htmlFor="password">Password</label>
                 <input id="password" type="password" onChange={(e) => mode === "login" ? setLoginData({...loginData, password: e.target.value}) : setFormData({...formData, password: e.target.value})} required/>
                 <span className="text-danger">{errors.password}</span>
+                <span className="password-rule">max: 8 characters;<br/>at least one symbol;<br/>at least one letter;<br/> at least one digit</span>
               </div>
               {mode === "login" ? null : (
                 <div className="cpassword d-flex flex-column">
