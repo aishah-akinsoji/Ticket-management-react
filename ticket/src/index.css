@@ -30,7 +30,7 @@ body{
 .hero{
     min-height: 70vh;
     background-color: #016094;
-    background-image: url(./wavebg.svg);
+    background-image: url(../wavebg.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
